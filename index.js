@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
+var logger = require('./logger');
 
+// MONGO ORM
 var db = require('./mongoorm').db;
 
 var dbConfig = {
@@ -8,6 +10,7 @@ var dbConfig = {
     dbname: "test"
 }
 
+// Modules
 var demo = require('./modules/demo');
 
 app.get('/', function (req, res) {
@@ -20,6 +23,6 @@ db.connect(dbConfig, function (err) {
         console.error('Error in DB Connection : ', err);
     }
     app.listen(3000, function () {
-        console.log("Server Started");
+        logger.info("Server Started at localhost:3000");
     });    
 });

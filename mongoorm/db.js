@@ -1,4 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
+var logger = require('../logger')
 
 var state = {
     db: null,
@@ -10,6 +11,7 @@ exports.connect = function (connection, done) {
     MongoClient.connect(connection.dburl, function (err, client) {
         if (err) return done(err);
         state.db = client.db(connection.dbname);
+        logger.info('MongoDB Connected at :', connection.dburl, 'Database:', connection.dbname);
         done();
     });
 };
