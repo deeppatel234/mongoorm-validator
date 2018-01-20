@@ -6,8 +6,11 @@
 
 ```javascript
     var db = require('./mongoorm').db;
-    
-    db.connect(function (err) {
+    var dbConfig = {
+        dburl: "mongodb://localhost:27017",
+        dbname: "test"
+    }
+    db.connect(dbConfig, function (err) {
         if (err) {
             console.error('Error in DB Connection : ', err);
         }
@@ -16,17 +19,6 @@
         });    
     });
 ```
-
-##### **Add Connection Strings in Connection.js**
-***
-```javascript
-    // MongoDB Server URL
-    exports.dburl = "mongodb://localhost:27017";
-    
-    // MongoDB DataBase Name
-    exports.dbname = "test";
-```
-> TODO: set this string in index.js
 
 ##### **Create Schema**
 ***

@@ -1,11 +1,10 @@
 var MongoClient = require('mongodb').MongoClient;
-var connection = require('./connection');
 
 var state = {
     db: null,
 };
 
-exports.connect = function (done) {
+exports.connect = function (connection, done) {
     if (state.db) return done();
 
     MongoClient.connect(connection.dburl, function (err, client) {
