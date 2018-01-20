@@ -29,4 +29,4 @@ class Record {
     }
 }
 
-exports.Record = Record;
+module.exports = Record;

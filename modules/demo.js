@@ -5,6 +5,7 @@ var fields = mongoorm.fields;
 var Schema = mongoorm.Schema;
 var Collection = mongoorm.Collection;
 
+debugger
 var studentSchema = new Schema({
     'name': fields.String(),
     'age': fields.Integer(),
