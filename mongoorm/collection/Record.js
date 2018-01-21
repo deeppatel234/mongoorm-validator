@@ -1,3 +1,6 @@
+var logger = require('../../logger')
+var _ = require('lodash');
+
 class Record {
     constructor(parent, data) {
         this.parent = parent;
@@ -16,6 +19,7 @@ class Record {
             return new Promise((resolve, reject) => {
                 self.parent.getCollection().insert(validData.data, function (err, result) {
                     if (err) {
+                        logger.error(err);
                         reject(err);
                     } else {
                         self.result = result;

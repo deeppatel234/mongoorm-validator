@@ -1,17 +1,12 @@
 class BasicField {
     constructor(props) {
-        this.fieldData = {
-            field: true,
-            props: props || {},
-            validate: this.validate
-        };
-    }
-    validate(value) {
-        return typeof value === this.type;
+        this.props = props || {};
+        Object.assign(this.props, this.getProps());
     }
     getData() {
-        return this.fieldData;
+        return this.props;
     }
+    getProps() {return {}}
 }
 
 module.exports = BasicField;

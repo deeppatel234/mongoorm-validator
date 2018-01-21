@@ -1,76 +1,78 @@
 var BasicField = require('./BasicField');
 var utils = require('../base/utils');
+var _ = require('lodash')
+
+class ObjectField {
+    constructor(props, options) {
+        this.options = options;
+        this.child = this.addProps(props);
+    }
+
+    addProps(props) {
+        let required = []
+        _.each(_.keys(props),function(key) {
+            if (props[key].type !== 'object' && props[key].required) {
+                required.push(key);
+                delete props[key].required
+            }            
+        });
+        return Object.assign({
+            type: "object",
+            properties: props,
+            required: required
+        },this.options)
+    }
+
+    getData() {
+        return this.child;
+    }
+}
 
 class ArrayField extends BasicField {
-    constructor(props) {
-        super(props);
-        this.fieldData = Object.assign(this.fieldData, {
-            type: "array",
-        });
-    }
-    validate(value) {
-        return Array.isArray(value);
+    getProps() {
+        return { type: "array" }
     }
 }
 
 class BooleanField extends BasicField {
-    constructor(props) {
-        super(props);
-        this.fieldData = Object.assign(this.fieldData, {
-            type: "boolean",
-        });
+    getProps() {
+        return { type: "boolean" }
     }
 }
 
 class DateField extends BasicField {
-    constructor(props) {
-        super(props);
-        this.fieldData = Object.assign(this.fieldData, {
-            type: "date",
-        });
-    }
-    validate(date) {
-        return utils.isValidDate(date);
+    getProps() {
+        return { type: "string", format: "date"}
     }
 }
 
 class IntegerField extends BasicField {
-    constructor(props) {
-        super(props);
-        this.fieldData = Object.assign(this.fieldData, {
-            type: "number",
-        });
-    }
-
-    validate(value) {
-        return Number(value) === value && value % 1 === 0;
+    getProps() {
+        return { type: "integer"}
     }
 }
 
-class FloatField extends IntegerField {
-    validate(value) {
-        return Number(value) === value && value % 1 !== 0;
+class FloatField extends BasicField {
+    getProps() {
+        return { type: "number" }
     }
 }
 
 class MixedField extends BasicField {
-    validate(value) {
-        return true;
+    getProps() {
+        return { type: ["number", "integer", "string", "boolean", "object"] }
     }
 }
 
 class ObjectId extends BasicField {
-    validate(value) {
-        return true;
+    getProps() {
+        return { type: "string" }
     }
 }
 
 class StringField extends BasicField {
-    constructor(props) {
-        super(props);
-        this.fieldData = Object.assign(this.fieldData, {
-            type: "string",
-        });
+    getProps() {
+        return { type: "string" }
     }
 }
 
@@ -82,5 +84,6 @@ exports.Fields = {
     Integer: (data) => new IntegerField(data).getData(),
     Mixed: (data) => new MixedField(data).getData(),
     ObjectId: (data) => new ObjectId(data).getData(),
+    Object: (data, options) => new ObjectField(data, options).getData(),
     String: (data) => new StringField(data).getData()
 };

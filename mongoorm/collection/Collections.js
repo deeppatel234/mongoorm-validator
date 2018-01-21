@@ -16,16 +16,11 @@ class Collection {
     }
 
     find(domain) {
-        var self = this;
-        return new Promise((resolve, reject) => {
-            self.getCollection().find(domain).toArray(function (err, data) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(data);
-                }
-            });
-        });
+        return this.getCollection().find(domain).toArray();
+    }
+
+    insertOne(doc) {
+        return this.getCollection().insertOne(doc)
     }
 }
 

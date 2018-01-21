@@ -1,13 +1,31 @@
 var _ = require('lodash');
+var Ajv = require('ajv');
+var ajv = new Ajv({ allErrors: true, useDefaults: true, removeAdditional: true });
 
 class Schema {
-    constructor(fields, options) {
-        this.fields = fields;
+    constructor(schema, options) {
+        this.schema = schema;
         this.defaultOptions = {
-            strict: true,
             validateBeforeSave: true
         };
         this.options = _.assignIn(this.defaultOptions, options);
+        if (this.options.globleObjectProps) {
+            Object.assign(this.schema, this.options.globleObjectProps)
+            this.applyGlobleObjectProps(this.schema, this.options.globleObjectProps);
+        }
+        this.test = ajv.compile(this.schema);
+    }
+
+    applyGlobleObjectProps(data, globleObjectProps) {
+        var self = this;
+        Object.keys(data).map((k) => {
+            if (typeof data[k] === 'object') {
+                if (data[k].type === 'object') {
+                    Object.assign(data[k], globleObjectProps)
+                }
+                self.applyGlobleObjectProps(data[k], globleObjectProps);
+            }
+        });
     }
 
     validateData(data) {
@@ -25,45 +43,16 @@ class Schema {
     }
 
     checkData(data) {
-        if (this.options.strict) {
-            data = this.removeKeys(this.fields, data);
+        let isValid = this.test(data)
+        
+        if (isValid) {
+            return {isValid: true,data:data}
         }
-        var res = {
-            isValid: true,
-            data: data,
-            error: ''
-        };
-        this.validateObject(data, this.fields, data, res);
-        return res;
-    }
-
-    removeKeys(source, changes) {
-        var self = this;
-        return Object.keys(source).reduce((res, k) => {
-            if (!source[k]['field']) {
-                res[k] = self.removeKeys(source[k], changes[k]);
-            } else if (k in changes) {
-                res[k] = changes[k];
-            } else {
-                res[k] = source[k];
-            }
-            return res;
-        }, {});
-    }
-
-    validateObject(ft, fields, data, res) {
-        var self = this;
-        Object.keys(ft).map((k) => {
-            if (typeof ft[k] !== 'object') {
-                if (fields[k] && !fields[k].validate(data[k], k)) {
-                    res.isValid = false;
-                    res.error += ` | type of ${k} must be ${fields[k].type}`;
-                    return false;
-                }
-            } else {
-                self.validateObject(ft[k], fields[k], data[k], res);
-            }
-        });
+        debugger
+        return {
+            isValid: false,
+            error: this.test.errors
+        }
     }
 }
 

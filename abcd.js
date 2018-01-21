@@ -1,63 +1,43 @@
-var _ = require('lodash');
+var Ajv = require('ajv');
+// var ajv = new Ajv({ removeAdditional: true, allErrors: true });
+// var schema = {
+//     "additionalProperties": false,
+//     "properties": {
+//         "foo": { "type": "number" },
+//         "dob" : { type: "string", format: "date" }
+//     }
+// }
 
-var fields = {
-    name: {
-        field: true,
-        type: 'string',
-        validate: function (value, key) {
-            console.log('value', value, key);
-        }
+// var data = {
+//     "foo": 0,
+//     "dob": "2017-06-08"
+// }
+
+// var validate = ajv.compile(schema);
+
+// console.log(validate(data)); // true
+// console.log(data);
+
+
+//const ajv = new Ajv({ allErrors: true });
+var ajv = new Ajv({ allErrors: true, useDefaults: true, removeAdditional: true});
+
+const schema = {
+    type: 'object',
+    properties: {
+        hello: { type: 'string' } ,
+        abcd: { type: 'string' }, 
     },
-    age: {
-        field: true,
-        type: 'integer',
-        validate: function (value, key) {
-            console.log('value', value, key);
-        }
-    },
-    address: {
-        street: {
-            field: true,
-            type: 'string',
-            validate: function (value, key) {
-                console.log('value', value, key);
-            }
-        },
-    }
+    required: ['abcd'],
+    additionalProperties: false
 };
 
-var data = {
-    name: 'deep',
-    age: 123,
-    address: {
-        street: '1234',
-        pin: 97,
-    }
-};
+const test = ajv.compile(schema);
 
-function update(source, changes) {
-    return Object.keys(source).reduce((res, k) => {
-        if (!source[k]['field']) {
-            res[k] = update(source[k], changes[k]);
-        } else if (k in changes) {
-            res[k] = changes[k];
-        } else {
-            res[k] = source[k];
-        }
-        return res;
-    }, {});
-}
+var obj = { hello: 'world' , abcde:'22'}
 
-var new_data = update(fields, data);
+const isValid = test(obj);
 
-function traverse(ft, fields, data) {
-    Object.keys(ft).map((k) => {
-        if (typeof ft[k] !== 'object') {
-            fields[k] && fields[k].validate(data[k],k);
-        } else {
-            traverse(ft[k], fields[k], data[k]);
-        }
-    });
-}
+var mes = isValid ? obj : { obj, error: test.errors }
 
-traverse(data, fields, data);
+console.log(mes);
