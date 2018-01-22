@@ -3,7 +3,7 @@ var db = mongoorm.db;
 var _ = require('lodash');
 var logger = require('../logger')
 
-var fields = mongoorm.fields;
+var fields = mongoorm.Fields;
 var Schema = mongoorm.Schema;
 var Collection = mongoorm.Collection;
 
