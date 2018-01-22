@@ -1,14 +1,17 @@
 var express = require('express');
 var app = express();
 var logger = require('./logger');
-
+var mongoorm = require('./mongoorm')
 // MONGO ORM
-var db = require('./mongoorm').db;
-
 var dbConfig = {
     dburl: "mongodb://localhost:27017",
     dbname: "test"
 }
+
+mongoorm.setLogger({
+    info: logger.info,
+    error: logger.error  
+});
 
 // Modules
 var demo = require('./modules/demo');
@@ -18,7 +21,7 @@ app.get('/', function (req, res) {
     res.send('Hello World');
 });
 
-db.connect(dbConfig, function (err) {
+mongoorm.db.connect(dbConfig, function (err) {
     if (err) {
         console.error('Error in DB Connection : ', err);
     }
