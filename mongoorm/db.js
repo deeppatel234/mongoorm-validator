@@ -1,10 +1,25 @@
+/*
+ *   =====================================
+ *       MongoDB Connection
+ *   =====================================
+*/
+
+// External Libraryes
 var MongoClient = require('mongodb').MongoClient;
-var logger = require('../logger')
 
-var state = {
-    db: null,
-};
+// Internal Functions
+var logger = require('./base/logger').getLogger()
 
+// Init DB State
+var state = { db: null };
+
+/*
+ * For Connect to MongoDB Instance
+ * 
+ * parmas
+ * connection {object}
+ * done {callback function}
+ */
 exports.connect = function (connection, done) {
     if (state.db) return done();
 
@@ -16,16 +31,28 @@ exports.connect = function (connection, done) {
     });
 };
 
+/*
+ * get mongodb cursor for db operations
+ * 
+ * return db {object}
+ */
 exports.get = function () {
     return state.db;
 };
 
+/*
+ * close mongodb connectio
+ * 
+ * param done {callback function}
+ */
 exports.close = function (done) {
     if (state.db) {
         state.db.close(function (err, result) {
+            if (err) {
+                logger.info('MongoDB Closing Connection Error :', err);
+                done(err);
+            }
             state.db = null;
-            state.mode = null;
-            done(err);
         });
     }
 };

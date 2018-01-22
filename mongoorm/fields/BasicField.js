@@ -1,3 +1,8 @@
+/*
+ * Basic Field: Base Class for Creating Model Fields
+ * 
+*/
+
 class BasicField {
     constructor(props) {
         this.props = props || {};

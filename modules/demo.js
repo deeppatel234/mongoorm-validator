@@ -1,3 +1,7 @@
+//=====================================
+//    FOR TESTING MONGO ORM
+//=====================================
+
 var mongoorm =  require('../mongoorm');
 var db = mongoorm.db;
 var _ = require('lodash');

@@ -1,3 +1,9 @@
+/*
+ *   =====================
+ *       Model Fields 
+ *   =====================
+*/
+
 var BasicField = require('./BasicField');
 var utils = require('../base/utils');
 var _ = require('lodash')
@@ -5,10 +11,29 @@ var _ = require('lodash')
 class ObjectField {
     constructor(props, options) {
         this.options = options;
-        this.child = this.addProps(props);
+        this.child = this.prepareChild(props);
     }
 
-    addProps(props) {
+    /*
+     * Prepare Validation Data for Type: object
+     *  
+     */
+    prepareChild(props) {
+        var defaultProps = {
+            type: "object",
+            properties: props,
+        }
+        var required = this.findRequiredFields(props)
+        if (required.length) {
+            defaultProps = Object.assign({ required },defaultProps);
+        }
+        return Object.assign(defaultProps,this.options)
+    }
+    /*
+     * Get Required fields of object
+     *  
+     */
+    findRequiredFields(props) {
         let required = []
         _.each(_.keys(props),function(key) {
             if (props[key].type !== 'object' && props[key].required) {
@@ -16,11 +41,7 @@ class ObjectField {
                 delete props[key].required
             }            
         });
-        return Object.assign({
-            type: "object",
-            properties: props,
-            required: required
-        },this.options)
+        return required;
     }
 
     getData() {
@@ -75,6 +96,12 @@ class StringField extends BasicField {
         return { type: "string" }
     }
 }
+
+/*
+ *   =======================================
+ *       Register Model Fields
+ *   =======================================
+*/
 
 exports.Fields = {
     Array: (data) => new ArrayField(data).getData(),

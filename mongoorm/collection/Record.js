@@ -12,6 +12,10 @@ class Record {
         return this.parent.getCollection();
     }
 
+    /*
+     * TODO: Improve Code
+     * 
+     */
     save() {
         var self = this;
         var validData = this.parent.schema.validateData(self.data);

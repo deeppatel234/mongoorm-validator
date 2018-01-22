@@ -5,17 +5,27 @@ var ajv = new Ajv({ allErrors: true, useDefaults: true, removeAdditional: true }
 class Schema {
     constructor(schema, options) {
         this.schema = schema;
+        this.options = options;
+        this.prepareOptions();
+        this.validate = ajv.compile(this.schema);
+    }
+    prepareOptions() {
         this.defaultOptions = {
             validateBeforeSave: true
         };
-        this.options = _.assignIn(this.defaultOptions, options);
+        this.options = Object.assign(this.defaultOptions, this.options);
+        this.prepareGlobelProperties();
+    }
+    prepareGlobelProperties() {
         if (this.options.globleObjectProps) {
             Object.assign(this.schema, this.options.globleObjectProps)
             this.applyGlobleObjectProps(this.schema, this.options.globleObjectProps);
         }
-        this.test = ajv.compile(this.schema);
     }
-
+    /*
+     * Applay Globle Properties to All Objects
+     *
+     */
     applyGlobleObjectProps(data, globleObjectProps) {
         var self = this;
         Object.keys(data).map((k) => {
@@ -32,7 +42,6 @@ class Schema {
         var validData = {
             isValid: false,
         };
-
         if (this.options.validateBeforeSave) {
             validData = this.checkData(data);
         } else {
@@ -43,15 +52,14 @@ class Schema {
     }
 
     checkData(data) {
-        let isValid = this.test(data)
+        let isValid = this.validate(data)
         
         if (isValid) {
             return {isValid: true,data:data}
         }
-        debugger
         return {
             isValid: false,
-            error: this.test.errors
+            error: this.validate.errors
         }
     }
 }
