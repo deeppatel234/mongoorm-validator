@@ -106,4 +106,15 @@ describe('BasicFields', function () {
     });
 
 
+    describe('Object', function () {
+        it('should return type object, properties and required', function () {
+            assert.deepEqual(Fields.Object({}, { additionalProperties: false }), { type: 'object', properties: {}, "required": [], "additionalProperties": false});
+        });
+
+        it('should return hello in object child', function () {
+            assert.deepEqual(Fields.Object({hello: Fields.String()}), { type: 'object', properties: {hello: {type:'string'}}, "required": [] });
+        });
+    });
+
+
 });
