@@ -5,7 +5,7 @@ var assert = require('chai').assert
 describe('Schema', function () {
     describe('basictest', function () {
         it('should return type integer', function () {
-            assert.deepEqual("abcde","abcd");
+            assert.deepEqual("abcd","abcd");
         });
     })
 })
