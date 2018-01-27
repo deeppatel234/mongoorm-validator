@@ -5,7 +5,7 @@
 */
 
 var BasicField = require('./BasicField');
-var utils = require('../base/utils');
+var mongoutils = require('../base/mongoutils');
 var _ = require('lodash')
 
 class ObjectField {

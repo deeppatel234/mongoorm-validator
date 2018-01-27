@@ -1,14 +1,16 @@
 var db = require('../db');
 var Record = require('./Record');
-
+var mongoutils = require('../base/mongoutils');
+var NativeMethod = require('../base/Native');
 /*
  *  Perform Operation in Collection
  *
 */
 class Collection {
-    constructor(name, schema) {
-        this.collectionName = name;
+    constructor(collectionName, schema) {
+        this.collectionName = collectionName;
         this.schema = schema;
+        this.nativeMethod = new NativeMethod(collectionName);
     }
 
     /*
@@ -25,17 +27,6 @@ class Collection {
     */
     create(data) {
         return new Record(this, data);
-    }
-
-    /*
-     *  DB Oprations
-    */
-    find(domain) {
-        return this.getCollection().find(domain).toArray();
-    }
-
-    insertOne(doc) {
-        return this.getCollection().insertOne(doc)
     }
 }
 
