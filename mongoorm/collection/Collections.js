@@ -1,16 +1,15 @@
 var db = require('../db');
 var Record = require('./Record');
 var mongoutils = require('../base/mongoutils');
-var NativeMethod = require('../base/Native');
+var NativeMethod = require('./Native');
 /*
  *  Perform Operation in Collection
  *
 */
-class Collection {
+class Collection extends NativeMethod{
     constructor(collectionName, schema) {
-        this.collectionName = collectionName;
+        super(collectionName);
         this.schema = schema;
-        this.nativeMethod = new NativeMethod(collectionName);
     }
 
     /*
