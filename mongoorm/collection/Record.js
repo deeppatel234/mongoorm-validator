@@ -1,5 +1,6 @@
 var logger = require('../../logger')
 var _ = require('lodash');
+var mongoutils = require('../base/mongoutils');
 
 class Record {
     constructor(parent, data) {
@@ -32,7 +33,7 @@ class Record {
                 });
             });
         } else {
-            return new Promise((resolve, reject) => {reject(validData.error);});
+            return mongoutils.asyncError(validData.exports);
         }
     }
 }
