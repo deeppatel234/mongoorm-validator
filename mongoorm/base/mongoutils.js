@@ -5,5 +5,5 @@
 */
 
 module.exports = {
-    asyncError: (msg) => new Promise((resolve, reject)=> reject(msg))
+  asyncError: (msg) => new Promise((resolve, reject) => reject(msg))
 }

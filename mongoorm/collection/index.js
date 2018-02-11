@@ -6,4 +6,4 @@
 
 var Collection = require('./Collections')
 
-exports.Collection = Collection;
+exports.Collection = Collection

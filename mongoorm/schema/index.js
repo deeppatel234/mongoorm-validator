@@ -4,6 +4,6 @@
  *   =======================================
 */
 
-var Schema = require('./Schema');
+var Schema = require('./Schema')
 
-exports.Schema = Schema;
+exports.Schema = Schema
