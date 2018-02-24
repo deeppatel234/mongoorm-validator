@@ -1,29 +1,54 @@
-var Ajv = require('ajv')
-var ajv = new Ajv({ allErrors: true, useDefaults: true, removeAdditional: true })
+var ajv = require('./validator')
 
 class Schema {
   constructor (schema, options) {
     this.schema = schema
     this.options = options
-    this.prepareOptions()
+    // Prepare Schema
+    // Apply Default Props, Globle Props
+    this.prepareSchema()
+  }
+  /*
+   * Compile AJV Schema for validate user data
+   */
+  compileSchema () {
     this.validate = ajv.compile(this.schema)
   }
-  prepareOptions () {
-    this.defaultOptions = {
-      validateBeforeSave: true
-    }
-    this.options = Object.assign(this.defaultOptions, this.options)
+  /*
+   * Preparing schema for validation
+   */
+  prepareSchema () {
+    this.assignDefaultProps()
     this.prepareGlobelProperties()
+    this.compileSchema()
   }
+  /*
+   * assign default options for schema
+   */
+  assignDefaultProps () {
+    this.options = Object.assign(this.getDefaultProps(), this.options)
+  }
+  /*
+   * return default options for schema
+   */
+  getDefaultProps () {
+    return {
+      validateBeforeSave: true,
+      globleObjectProps: false
+    }
+  }
+  /*
+   * Apply globle properties to each objects
+   */
   prepareGlobelProperties () {
-    if (this.options.globleObjectProps) {
-      Object.assign(this.schema, this.options.globleObjectProps)
-      this.applyGlobleObjectProps(this.schema, this.options.globleObjectProps)
+    let globleObjectProps = this.options.globleObjectProps
+    if (globleObjectProps) {
+      Object.assign(this.schema, globleObjectProps)
+      this.applyGlobleObjectProps(this.schema, globleObjectProps)
     }
   }
   /*
    * Applay Globle Properties to All Objects
-   *
    */
   applyGlobleObjectProps (data, globleObjectProps) {
     var self = this
@@ -36,29 +61,21 @@ class Schema {
       }
     })
   }
-
+  /*
+   * Validate Data before save record in database
+   */
   validateData (data) {
-    var validData = {
-      isValid: false
-    }
     if (this.options.validateBeforeSave) {
-      validData = this.checkData(data)
-    } else {
-      validData.isValid = true
-      validData.data = data
-    }
-    return validData
-  }
-
-  checkData (data) {
-    let isValid = this.validate(data)
-
-    if (isValid) {
-      return {isValid: true, data: data}
+      return {
+        data,
+        isValid: this.validate(data),
+        error: this.validate.errors || ''
+      }
     }
     return {
-      isValid: false,
-      error: this.validate.errors
+      data,
+      isValid: true,
+      error: ''
     }
   }
 }

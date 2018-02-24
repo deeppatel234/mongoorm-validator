@@ -31,7 +31,7 @@ class Record {
         })
       })
     } else {
-      return mongoutils.asyncError(validData.exports)
+      return mongoutils.asyncError(validData.error)
     }
   }
 }
