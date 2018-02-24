@@ -5,7 +5,6 @@
 */
 
 var BasicField = require('./BasicField')
-var _ = require('lodash')
 
 class ObjectField {
   constructor (props, options) {
@@ -21,18 +20,41 @@ class ObjectField {
       type: 'object',
       properties: props
     }
-    var required = this.findRequiredFields(props)
-    if (required.length) {
-      defaultProps = Object.assign({ required }, defaultProps)
-    }
+    this.prepareRequiredFields(defaultProps)
+    this.prepareDefaultFields(defaultProps)
     return Object.assign(defaultProps, this.options)
+  }
+
+  prepareDefaultFields (defaultProps) {
+    let dynamicDefaults = this.findDefaultFields(defaultProps.properties)
+    if (Object.keys(dynamicDefaults).length) {
+      defaultProps['dynamicDefaults'] = dynamicDefaults
+    }
+  }
+
+  prepareRequiredFields (defaultProps) {
+    let required = this.findRequiredFields(defaultProps.properties)
+    if (required.length) {
+      defaultProps['required'] = required
+    }
+  }
+
+  findDefaultFields (props) {
+    let dynamicDefaults = {}
+    Object.keys(props).forEach(function (key) {
+      if (props[key].type !== 'object' && props[key].default && typeof (props[key].default) === 'object') {
+        dynamicDefaults[key] = props[key].default.func
+        delete props[key].default
+      }
+    })
+    return dynamicDefaults
   }
   /*
    * Get Required fields of object
    */
   findRequiredFields (props) {
     let required = []
-    _.each(_.keys(props), function (key) {
+    Object.keys(props).forEach(function (key) {
       if (props[key].type !== 'object' && props[key].required) {
         required.push(key)
         delete props[key].required

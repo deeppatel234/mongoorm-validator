@@ -24,6 +24,7 @@ mongoorm.db.connect(dbConfig, function (err) {
     var mySchema = fields.Object({
         name: fields.String({ required: true }),
         age: fields.Integer({ required: true }),
+        dob: fields.String({ default: { func: 'datetime' } }),
         // arr: fields.Array({ items: fields.Boolean()}),
         // dov: fields.Date(),
         // address: fields.Object({
