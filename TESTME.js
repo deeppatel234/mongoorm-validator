@@ -41,3 +41,5 @@ const isValid = test(obj);
 var mes = isValid ? obj : { obj, error: test.errors }
 
 console.log(mes);
+console.log('hello');
+console.log('helloworld');
