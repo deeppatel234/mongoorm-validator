@@ -42,9 +42,15 @@ mongoorm.db.connect(dbConfig, function (err) {
 
     var studentModel = new Collection('student', studentSchema);
 
-    studentModel.find({}).then(function (r) {
-        console.log(r);
-    })
+    // studentModel.deleteMany({}).then(function(params) {
+    //     studentModel.find({}).then(function (r) {
+    //         console.log(r);
+    //     })
+    // })
+
+    // studentModel.find({}).then(function (r) {
+    //     console.log(r);
+    // })
     var yes = studentModel.create({
         name: "deep",
         age: 21,
@@ -54,8 +60,13 @@ mongoorm.db.connect(dbConfig, function (err) {
         //     street: "12/9/2018",
         // }
     });
+    // yes.save();
     yes.save().then(function (params) {
-        console.log(params);
+        console.log('saveddddddddddddddddddddddddddddddddd!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        
+        // setTimeout(() => {
+        //     yes.delete()
+        // }, 3000);
     }).catch(function (err) {
         console.log(err);
         
