@@ -2,37 +2,61 @@ var logger = require('../../logger')
 var mongoutils = require('../base/mongoutils')
 
 class Record {
-  constructor (parent, data) {
-    this.parent = parent
+  constructor (collection, data, options) {
+    this.collection = collection
     this.data = data
-    this.result = {}
+    this.options = options
+    this.id = null
   }
-
-  getCollection () {
-    return this.parent.getCollection()
-  }
-
-  /*
-  * TODO: Improve Code
-  */
-  save () {
-    var self = this
-    var validData = this.parent.schema.validateData(self.data)
+  /**
+   * Save Single Record in Database
+   */
+  saveRecord () {
+    let self = this
+    let validData = this.collection.validateSingleData(this.data)
     if (validData.isValid) {
       return new Promise((resolve, reject) => {
-        self.parent.getCollection().insert(validData.data, function (err, result) {
+        self.collection.insertOne(self.data, function (err, result) {
           if (err) {
             logger.error(err)
             reject(err)
           } else {
-            self.result = result
-            resolve(result)
+            self.data = result.ops[0]
+            self.id = self.data._id
+            resolve(self.result)
           }
         })
       })
     } else {
       return mongoutils.asyncError(validData.error)
     }
+  }
+  /**
+   * save Single Record in Database
+   */
+  save () {
+    if (this._id) {
+      this.update()
+    } else {
+      this.saveRecord()
+    }
+  }
+  /**
+   * update Single Record in Database
+   */
+  update () {
+    let validData = this.collection.validateSingleData(this.data)
+    if (validData.isValid) {
+      return this.collection.updateOne({ _id: this.id }, {$set: this.data})
+    } else {
+      return mongoutils.asyncError(validData.error)
+    }
+  }
+  /**
+   * delete record in Database
+   */
+  delete () {
+    return this.collection.deleteOne({ _id: this.id })
   }
 }
 
