@@ -1,25 +1,25 @@
-var ajv = require('./validator')
+var validator = require('./validator')
 
 class Schema {
   constructor (schema, options) {
     this.schema = schema
     this.options = options
     // Prepare Schema
-    // Apply Default Props, Globle Props
+    // Apply Default Props, global Props
     this.prepareSchema()
   }
   /*
-   * Compile AJV Schema for validate user data
+   * Compile Schema for validate user data
    */
   compileSchema () {
-    this.validate = ajv.compile(this.schema)
+    this.validate = validator.compile(this.schema)
   }
   /*
    * Preparing schema for validation
    */
   prepareSchema () {
     this.assignDefaultProps()
-    this.prepareGlobelProperties()
+    this.prepareGlobalProperties()
     this.compileSchema()
   }
   /*
@@ -34,30 +34,30 @@ class Schema {
   getDefaultProps () {
     return {
       validateBeforeSave: true,
-      globleObjectProps: false
+      globalObjectProps: false
     }
   }
   /*
-   * Apply globle properties to each objects
+   * Apply global properties to each objects
    */
-  prepareGlobelProperties () {
-    let globleObjectProps = this.options.globleObjectProps
-    if (globleObjectProps) {
-      Object.assign(this.schema, globleObjectProps)
-      this.applyGlobleObjectProps(this.schema, globleObjectProps)
+  prepareGlobalProperties () {
+    let globalObjectProps = this.options.globalObjectProps
+    if (globalObjectProps) {
+      Object.assign(this.schema, globalObjectProps)
+      this.applyGlobalObjectProps(this.schema, globalObjectProps)
     }
   }
   /*
-   * Applay Globle Properties to All Objects
+   * Apply global Properties to All Objects
    */
-  applyGlobleObjectProps (data, globleObjectProps) {
+  applyGlobalObjectProps (data, globalObjectProps) {
     var self = this
     Object.keys(data).map((k) => {
       if (typeof data[k] === 'object') {
         if (data[k].type === 'object') {
-          Object.assign(data[k], globleObjectProps)
+          Object.assign(data[k], globalObjectProps)
         }
-        self.applyGlobleObjectProps(data[k], globleObjectProps)
+        self.applyGlobalObjectProps(data[k], globalObjectProps)
       }
     })
   }

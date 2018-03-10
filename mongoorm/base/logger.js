@@ -1,7 +1,7 @@
 /*
  *   This is use for set default logger for MONGOORM.
  *   User can use any logging framework.
- *   Just assgin error and info functions in MongoORM init
+ *   Just assign error and info functions in MongoORM init
  */
 this.logger = {
   error: () => {},

@@ -4,7 +4,7 @@
  *   =====================================
 */
 
-// External Libraryes
+// External Libraries
 var MongoClient = require('mongodb').MongoClient
 
 // Internal Functions
@@ -15,7 +15,7 @@ var state = { db: null }
 
 /*
  * For Connect to MongoDB Instance
- * parmas
+ * params
  * connection {object}
  * done {callback function}
  */
@@ -39,7 +39,7 @@ exports.get = function () {
 }
 
 /*
- * close mongodb connectio
+ * close mongodb connection
  * param done {callback function}
  */
 exports.close = function (done) {
