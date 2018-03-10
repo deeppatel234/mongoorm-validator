@@ -10,36 +10,36 @@ class Collection extends NativeMethod {
     this.schema = schema
   }
   /**
-   * Validate User Data
-   * @param {object|array} data
+   * Validate User record
+   * @param {object|array} record
    */
-  validateData (data) {
-    if (Array.isArray(data)) {
-      return this.validateMultipleData(data)
+  validateData (record) {
+    if (Array.isArray(record)) {
+      return this.validateMultipleData(record)
     } else {
-      return this.validateSingleData(data)
+      return this.validateSingleData(record)
     }
   }
   /**
    * Validate Single record
-   * @param {object} data
+   * @param {object} record
    */
-  validateSingleData (data) {
-    return this.schema.validateData(data)
+  validateSingleData (record) {
+    return this.schema.validateData(record)
   }
   /**
-   * Validate mutliple records
-   * @param {array} datas
+   * Validate multiple records
+   * @param {array} records
    */
-  validateMultipleData (datas) {
-    return datas.map((d) => this.schema.validateData(d))
+  validateMultipleData (records) {
+    return records.map((r) => this.schema.validateData(r))
   }
   /**
    * Return Single Record for Collection
-   * @param {object} data
+   * @param {object} record
    */
-  create (data, options) {
-    return new Record(this, data, options)
+  create (record, options) {
+    return new Record(this, record, options)
   }
 }
 

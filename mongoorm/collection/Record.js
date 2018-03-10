@@ -16,7 +16,7 @@ class Record {
     let validData = this.collection.validateSingleData(this.data)
     if (validData.isValid) {
       return new Promise((resolve, reject) => {
-        self.collection.insertOne(this.data, function (err, result) {
+        self.collection.insertOne(self.data, function (err, result) {
           if (err) {
             logger.error(err)
             reject(err)
