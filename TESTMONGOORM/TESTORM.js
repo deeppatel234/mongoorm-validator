@@ -1,5 +1,5 @@
 var logger = require('./logger');
-var mongoorm = require('./mongoorm')
+var mongoorm = require('../index')
 // MONGO ORM
 var db = mongoorm.db;
 var fields = mongoorm.Fields;

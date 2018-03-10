@@ -8,7 +8,7 @@
 var MongoClient = require('mongodb').MongoClient
 
 // Internal Functions
-var logger = require('./base/logger').getLogger()
+var logger = require('./lib/base/logger').getLogger()
 
 // Init DB State
 var state = { db: null }

@@ -1,0 +1,28 @@
+var express = require('express')
+var app = express()
+var logger = require('./logger')
+var mongoorm = require('../index')
+// MONGO ORM
+var dbConfig = {
+  dburl: 'mongodb://localhost:27017',
+  dbname: 'test'
+}
+
+mongoorm.setLogger({
+  info: logger.info,
+  error: logger.error
+})
+
+// Modules
+app.get('/', function (req, res) {
+  res.send('Hello World')
+})
+
+mongoorm.db.connect(dbConfig, function (err) {
+  if (err) {
+    console.error('Error in DB Connection : ', err)
+  }
+  app.listen(3000, function () {
+    logger.info('Server Started at localhost:3000')
+  })
+})
